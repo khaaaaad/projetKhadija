@@ -462,7 +462,8 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         self.timer = None
         self.popUp = self.createPopUp()
         self.show()
-         
+        self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
+        
         
         
         #implement the window and the image/gif preferable add a if gif option true or false
@@ -471,20 +472,16 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         '''
     def createPopUp(self):
         popUp = None
+        popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+        popUp.title("PUBLICITÉ!1!1")
+        popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
+        popUp.resizable(False,False)
         if self.skippable:
-            popUp = ctk.CTkToplevel(self.master, fg_color= "white")
-            popUp.title("PUBLICITÉ!1!1")
-            popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
-            popUp.resizable(False,False)
             #dont forget to add the picture
             if self.sound != None:
                 self.sound.play()
         else:
-            popUp = ctk.CTkToplevel(self.master, fg_color= "white")
-            popUp.title("PUBLICITÉ!1!1")
-            popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
-            popUp.resizable(False,False)
-            popUp.protocol('WM_DELETE_WINDOW', lambda: None) # protocol makes it not the app but more internal, delete button wont work once clicked
+            popUp.overrideredirect(True) # removes the small bar in the top
             self.timer = Timer(popUp,10)
             self.timer.updateTimerWithPrint()
             #if self.sound != None:
@@ -496,8 +493,6 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
                 exitButton.pack(padx = 10, side = 'left')
             popUp.after((self.timer.getSeconds() * 1000) + 2 , lambda: unlockExit())
            
-            
-
         return popUp
     def show(self):
         return self.popUp
@@ -514,7 +509,8 @@ class AdsFickle(): #objet ad fickle
              pass
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
-                
+class AlertPopUp():
+    pass
      
 app = ctk.CTk()
 #pg.mixer.init()
