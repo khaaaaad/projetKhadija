@@ -451,33 +451,40 @@ class Sounds():
 
 def randomAdvertisement():
     data1 = DataAds("ads/dataV2.csv")
-    ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
+    ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
 
 
     delay = random.randint(15000, 30000)
     app.after(delay, randomAdvertisement)
 
 class AdsPermanent(ctk.CTkFrame): # objet ad permanent
-    def __init__(self,master,dataAds,height,width):
+    def __init__(self,master,dataAds,height,width,banner):
         super().__init__(master)
         self.master = master
 
         self.name = str(random.choice(dataAds.getAdNameListP()))
         self.sound = None
-        #if dataAds.getAdSpecificP(self.name)["sound"]:
-            #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
+        self.banner = banner
+        if dataAds.getAdSpecificP(self.name)["sound"]:
+            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
         self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
         self.height = height
         self.width = width
+        self.x = 0
+        self.y = 0
+        self.dataAds = dataAds
         self.imageFile = dataAds.getAdSpecificP(self.name)["image"] #image link
-        self.image = ImageConfig(self.imageFile, self.imageFile,self.width,self.height)       
-        self.img_label = None
-        self.x = random.randint(0,800) # check what it is exactly
-        self.y = random.randint(0,400)
-        self.popUp = self.createPopUp()
-        self.show()
-        self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
-        
+        if self.dataAds.getAdSpecificP(self.name)["Gif"] == False:
+            self.image = ImageConfig(self.imageFile, self.imageFile,self.width,self.height)       
+            self.img_label = None
+        if self.banner == False:
+            self.x = random.randint(0,800) # check what it is exactly
+            self.y = random.randint(0,400)
+            self.popUp = self.createPopUp()
+            self.show()
+            self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
+        else:
+            self.createBanner()
         
         
         #implement the window and the image/gif preferable add a if gif option true or false
@@ -487,10 +494,12 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
     def createPopUp(self):
         popUp = None
         popUp = ctk.CTkToplevel(self.master, fg_color= "white")
-        popUp.title("PUBLICITÉ!1!1")
         popUp.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}") # check if the order is correct
-        self.img_label = ctk.CTkLabel(popUp, text = '', image = self.image.getImage())         
-        self.img_label.place(x = 0, y = 0)
+        if self.dataAds.getAdSpecificP(self.name)["Gif"] == False:
+            self.img_label = ctk.CTkLabel(popUp, text = '', image = self.image.getImage())         
+            self.img_label.place(x = 0, y = 0)
+        else:
+            self.gifImg = GifImage(popUp, self.imageFile,0,0,self.width,self.height,20)
                 
         popUp.resizable(False,False)
         
@@ -502,9 +511,9 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             popUp.overrideredirect(True) # removes the small bar in the top
             self.timer = Timer(popUp,10)
             self.timer.updateTimerWithPrint()
-            #if self.sound != None:
-                #self.sound.play()
-            #dont forget the img
+            if self.sound != None:
+                self.sound.play()
+            
             
             def unlockExit():
                 exitButton = ctk.CTkButton(popUp, text= "Quitter", command= lambda: popUp.destroy(), fg_color= "red")
@@ -512,6 +521,8 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             popUp.after((self.timer.getSeconds() * 1000) + 2 , lambda: unlockExit())
            
         return popUp
+    def createBanner(self):
+        pass
     def show(self):
         return self.popUp
    
@@ -529,7 +540,7 @@ class AdsFickle(): #objet ad fickle
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
    
 app = ctk.CTk()
-#pg.mixer.init()
+pg.mixer.init()
 app.geometry("800x400")
 #data1 = DataAds("ads/dataV2.csv")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
@@ -545,6 +556,7 @@ app.mainloop()
 #soundtest = Sounds("sfx/tester3.wav")
 #soundtest = pg.mixer.Sound("sfx/tester3.wav")
 #soundtest.play()
+
 
 
 #data1 = DataAds("ads/dataAds(Sheet1).csv") #jsp honestly
