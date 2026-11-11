@@ -1,0 +1,357 @@
+'''Classes par Émilie'''
+
+
+import customtkinter as ctk
+import random
+import time
+
+
+class User():
+    '''Joueur et ses informations'''
+
+    def __init__(self):
+
+        #initialement None, on demandera le nom par la suite
+        self.name = None
+
+        #augmentera selon le nombre de poissons attrappés
+        self.level = 0
+
+        #contiendra tout ce qui sera attrappé
+        self.inventory = []
+
+        #seront mis à jour lors de chaque prise
+        self.nbFish = 0
+        self.nbTrash = 0
+        self.nbCatch = 0
+
+
+    #setters
+    #après avoir demander le nom
+    def setUserName(self, name):
+        self.name = name
+
+    def setUserLevel(self, level):
+        self.level = level
+
+    def setUserInventory(self, inventory):
+        self.inventory = inventory
+
+    def setUserNbFish(self, nbFish):
+        self.nbFish = nbFish
+
+    def setUserNbTrash(self, nbTrash):
+        self.nbTrash = nbTrash
+
+    def setUserNbCatsh(self, nbCatch):
+            self.nbCatsh = nbCatch
+
+
+    #getters
+    def getUserName(self):
+        return self.name
+
+    def getUserLevel(self):
+        return self.level
+
+    def getUserInventory(self):
+        return self.inventory
+
+    def getUserNbFish(self):
+        return self.nbFish
+
+    def getUserNbTrash(self):
+        return self.nbTrash
+
+    def getUserNbCatch(self):
+        return self.nbCatch
+
+
+    #met à jour l'inventaire, le total de poissons, de déchets et les deux ensemble
+    def updateInventory(self, catch):
+        self.inventory.append(catch)
+        self.nbCatch += 1
+
+        if catch.isFish:
+            self.nbFish += 1
+        else:
+            self.nbTrash += 1
+
+
+    #met à jour le niveau avec une condition
+    #si la condition est remplie on change le niveau et on retourne vrai, sinon on retourne faux 
+    def isLeveledUp(self):
+
+        #la condition est que le nombre total de poissons attrappés doit être supérieur ou 
+        #égal au niveau actuel + (niveau + niveau-1 + niveau-2 + ... + 1) * 2
+        #par exemple:
+        #niveau de l'utilisateur:                 0       1       2       3       4       5       6       7       8
+        #total nécessaire pour changer de niveau:     1       3       8       15      24      35      48      53
+        #différence avec le niveau précédent:        1       2       5       7       9       11      13      15
+        if self.nbFish >= (self.level + (sum(range(1, self.level+1))) * 2):
+            self.level += 1
+            return True
+        return False
+
+
+
+
+class Catch():
+    '''Poisson ou déchet possible de pêcher'''
+
+    #doit être créé avant la pêche car le temps d'attente, le temps de pêche et le nombre de clics pour la pêche sont fait ici
+    def __init__(self, data):
+
+        #on veut un poisson/déchet au hasard
+        self.name = random.choice(data.getAllNamesList())
+
+        #pour les poissons
+        if self.name in data.getFishNameList():
+
+            #on veut le poids (en kg) au hasard dans la plage associée
+            self.weight = random.uniform(float(data.getFishSpecific(self.name)["startWeight"]), float(data.getFishSpecific(self.name)["finishWeight"]))
+            #on a seulement besoin de 3 chiffres après la virgule
+            self.weight = round(self.weight,3)
+
+            #on veut la longueur (en cm) au hasard dans la plage associée
+            self.size = random.uniform(float(data.getFishSpecific(self.name)["startSize"]), float(data.getFishSpecific(self.name)["finishSize"]))
+            #on a seulement besoin de 3 chiffres après la virgule
+            self.size = round(self.size,3)
+
+            self.isFish = True
+
+            #la description spécifique à la sorte de poisson
+            self.description = data.getFishSpecific(self.name)["description"]
+
+            #la rareté va servir pour implémenter le temps d'attente et le nombre de clics pour la pêche
+            self.rarity = data.getFishSpecific(self.name)["rarity"]
+
+
+        #pour les déchets
+        else : 
+
+            #on veut le poids (en kg) au hasard dans la plage associée
+            self.weight = random.uniform(float(data.getTrashSpecific(self.name)["startWeight"]), float(data.getTrashSpecific(self.name)["finishWeight"]))  #(en kg)
+            #on a seulement besoin de 3 chiffres après la virgule
+            self.weight = round(self.weight,3)
+
+            #on veut la longueur (en cm) au hasard dans la plage associée
+            self.size = random.uniform(float(data.getTrashSpecific(self.name)["startSize"]), float(data.getTrashSpecific(self.name)["finishSize"]))  #(en cm)
+            #on a seulement besoin de 3 chiffres après la virgule
+            self.size = round(self.size,3)
+
+            self.isFish = False
+
+            #la description spécifique à la sorte de déchet
+            self.description = data.getTrashSpecific(self.name)["description"]
+
+            #la rareté va servir pour implémenter le temps d'attente et le nombre de clics pour la pêche
+            self.rarity = data.getTrashSpecific(self.name)["rarity"]
+
+
+        #on a choisi d'avoir le temps de pêche constant, peu importe la rareté
+        #il s'agit du temps maximal pour atteindre le nombre clics requis pour obtenir la prise (en sec)
+        self.timeFishing = 10
+
+        #les attributs du temps d'attente et du nombre de clics nécessaires pour pêcher dépendent de la rareté
+        if self.rarity == "common":
+
+            #le temps d'attente avant que la pêche ne commence (en sec)
+            self.timeWaiting = 4
+
+            #le nombre de clics nécessaire d'atteindre pour obtenir la prise
+            self.clicks = 10
+
+        elif self.rarity == "uncommon":
+
+            #on veut augmenter un peu le temps d'attente pour que l'utilisateur
+            #ait une petite idée de la difficulté de la pêche qui s'en vient
+            #(+1 sec avec la rareté précédente)
+            self.timeWaiting = 5  #(en sec)
+
+            #on veut augmenter le nombre de clics pour que la difficulté 
+            #augmente avec la rareté, puisque que le temps de pêche reste le même
+            #(+6 clics avec la rareté précédente)
+            self.clicks = 16
+
+        elif self.rarity == "rare":
+
+            #(+1 sec avec la rareté précédente)
+            self.timeWaiting = 6  #(en sec)
+
+            #(+8 clics avec la rareté précédente)
+            self.clicks = 24
+
+        elif self.rarity == "epic":
+
+            #(+1 sec avec la rareté précédente)
+            self.timeWaiting = 7  #(en sec)
+
+            #(+11 clics avec la rareté précédente)
+            self.clicks = 35
+
+        elif self.rarity == "legendary":
+
+            #(+1 sec avec la rareté précédente)
+            self.timeWaiting = 8  #(en sec)
+
+            #(+15 clics avec la rareté précédente)
+            self.clicks = 50
+
+
+        #au cas où il y aurait un problème de chargement
+        else:
+
+            #pour pas que l'utilisateur n'attende pour rien
+            self.timeWaiting = 0  #(en sec)
+
+            #pour pas que l'utilisateur de travail pour rien
+            self.clicks = 0     
+
+
+    #setters
+    def setName(self, name):
+        self.name = name
+
+    def setWeight(self, weight):
+        self.weight = weight
+
+    def setSize(self, size):
+        self.size = size
+
+    def setIsFish(self, isFish):
+        self.isFish = isFish
+
+    def setDescription(self, description):
+        self.description = description
+
+    def setRarity(self, rarity):
+        self.rarity = rarity
+
+    def setTimeWaiting(self, timeWaiting):
+        self.timeWaiting = timeWaiting
+
+    def setTimeFishing(self, timeFishing):
+        self.timeFishing = timeFishing
+
+    def setNbClicks(self, nbClicks):
+        self.getNbClicks = nbClicks
+
+
+        
+    #getters
+    def getName(self):
+        return self.name
+    
+    def getWeight(self):
+        return self.weight
+    
+    def getSize(self):
+        return self.size
+    
+    def getIsFish(self):
+        return self.isFish
+    
+    def getDescription(self):
+        return self.description
+    
+    def getRarity(self):
+        return self.rarity
+    
+    def getTimeWaiting(self):
+        return self.timeWaiting
+
+    def getTimeFishing(self):
+        return self.timeFishing
+
+    def getNbClicks(self):
+        return self.clicks
+
+
+
+
+
+
+
+class Timer(): 
+    '''Compte-à-rebours'''
+
+    def __init__(self, master, seconds):
+
+        #temps inital du timer
+        self.seconds = seconds
+        self.milliseconds = 0
+
+        #servira principalement à savoir si le timer a déjà été détruit (autoDestruct)
+        self.isFinished = False
+
+        #l'application elle-même pour le label
+        self.master = master
+
+        #le visuel du compte-à-rebours, ne sera pas afficher pour le timer sans affichage
+        self.label = ctk.CTkLabel(self.master, text=f"{self.seconds:02d}.{self.milliseconds:02d} sec", font=("Arial", 15, "bold"), text_color="#B10E0E")
+        self.label.pack(side="right", padx=10)
+
+        #correspond au moment où le timer sera considéré comme terminé
+        self.end = time.time() + self.seconds
+
+
+    #timer avec affichage du compte-à-rebours
+    def updateTimerWithPrint(self):
+        currentTime = time.time()
+
+        #si la légende n'a pas encore été détruit (autoDestruct) et on n'est pas encore rendu à la fin
+        if not self.isFinished and currentTime < self.end:
+
+            #mettre à jour le temps restant avant la fin du compte-à-rebours
+            timeLeft = self.end - currentTime
+
+            #séparer les secondes et les millisecondes
+            secondsLeft = int(timeLeft)
+
+            #prendre la partie après la virgule et on la multiplie par 100 car on l'utilise comme un entier
+            millisecondsLeft = int((timeLeft - secondsLeft) * 100)
+
+            #mettre à jour la légende (le 02d c'est pour 2 décimales)
+            self.label.configure(text=f"{secondsLeft:02d}.{millisecondsLeft:02d} sec")
+                                
+            #rafraîchir toutes les 10 ms pour que le défilement soit fluide
+            self.master.after(10, self.updateTimerWithPrint)
+            
+
+        #si c'est terminé
+        else:
+
+            #change la légende 
+            self.label.configure(text="C'est fini !")
+            self.isFinished = True
+            self.master.after(3*1000, self.autoDestruct)
+
+            
+    #timer sans affichage du compte-à-rebours
+    def updatetimerWithoutPrint(self):
+        currentTime = time.time()
+
+        #si la légende n'a pas encore été détruit (autoDestruct) et on n'est pas encore rendu à la fin
+        if not self.isFinished and currentTime < self.end:
+
+            #puisqu'on ne l'affiche pas, il n'est pas nécessaire de raffraichir aussi souvent        
+            self.master.after(50, self.updateTimerWithPrint)
+        
+        else:
+            self.isFinished = True
+
+
+    #getter pour savoir si le compte-à-rebours est terminé
+    def getIsFinished(self):
+        return self.isFinished
+
+    #détruit la légende
+    def autoDestruct(self):
+        self.label.destroy()
+
+    #met la légende à 00 si la légende a déjà été créé et qu'il existe encore
+    def stop(self):
+        self.isFinished = True
+        if self.label is not None and self.label.winfo_exists():
+            self.label.configure(text="00 sec")
