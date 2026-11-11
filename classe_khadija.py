@@ -447,9 +447,28 @@ class Sounds():
         self.getSfx().play()
         time.sleep(2) # need to fix this lowkey
          
-    # to play insert getsfx.play()
+    # to play insert getsfx.play()      
+class AdsFickle(): # objet ad permanent
+    def __init__(self,dataAds):
+        self.name = random.choice(dataAds.getAdNameListP())
+        if dataAds.getAdSpecificP(self.name)["sound"]:
+            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
+        self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
         
-         
+        #implement the window and the image/gif preferable add a if gif option true or false
+        '''
+        if skippable then add an exit if not make it so the user has to wait at least 30 seconds before they can get rid of it
+        '''
+
+
+class AdsPermanent(): #objet ad fickle
+    def __init__(self,dataAds):
+        self.name = random.choice(dataAds.getAdNameListF())
+        if dataAds.getAdSpecificF(self.name)["sound"]:
+            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
+        self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
+                
+     
 #app = ctk.CTk()
 #app.geometry("800x400")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
@@ -459,7 +478,7 @@ class Sounds():
 #app.mainloop()
 
 pg.mixer.init()
-soundtest = Sounds("ads/tester3.wav")
+soundtest = Sounds("sfx/tester3.wav")
 #soundtest = pg.mixer.Sound("ads/tester3.wav")
 soundtest.play()
 
