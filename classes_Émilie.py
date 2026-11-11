@@ -295,7 +295,8 @@ class Timer():
         #correspond au moment où le timer sera considéré comme terminé
         self.end = time.time() + self.seconds
 
-
+    def getSeconds(self):
+        return self.seconds
     #timer avec affichage du compte-à-rebours
     def updateTimerWithPrint(self):
         currentTime = time.time()

@@ -448,39 +448,90 @@ class Sounds():
         time.sleep(2) # need to fix this lowkey
          
     # to play insert getsfx.play()      
-class AdsFickle(): # objet ad permanent
-    def __init__(self,dataAds):
+class AdsPermanent(ctk.CTkFrame): # objet ad permanent
+    def __init__(self,master,dataAds,height,width):
+        super().__init__(master)
+        self.master = master
         self.name = random.choice(dataAds.getAdNameListP())
-        if dataAds.getAdSpecificP(self.name)["sound"]:
-            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
+        self.sound = None
+        #if dataAds.getAdSpecificP(self.name)["sound"]:
+            #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
         self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
+        self.height = height
+        self.width = width
+        self.timer = None
+        self.popUp = self.createPopUp()
+        self.show()
+         
+        
         
         #implement the window and the image/gif preferable add a if gif option true or false
         '''
         if skippable then add an exit if not make it so the user has to wait at least 30 seconds before they can get rid of it
         '''
+    def createPopUp(self):
+        popUp = None
+        if self.skippable:
+            popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+            popUp.title("PUBLICITÉ!1!1")
+            popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
+            popUp.resizable(False,False)
+            #dont forget to add the picture
+            if self.sound != None:
+                self.sound.play()
+        else:
+            popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+            popUp.title("PUBLICITÉ!1!1")
+            popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
+            popUp.resizable(False,False)
+            popUp.protocol('WM_DELETE_WINDOW', lambda: None) # protocol makes it not the app but more internal, delete button wont work once clicked
+            self.timer = Timer(popUp,10)
+            self.timer.updateTimerWithPrint()
+            #if self.sound != None:
+                #self.sound.play()
+            #dont forget the img
+            
+            def unlockExit():
+                exitButton = ctk.CTkButton(popUp, text= "Quitter", command= lambda: popUp.destroy(), fg_color= "red")
+                exitButton.pack(padx = 10, side = 'left')
+            popUp.after((self.timer.getSeconds() * 1000) + 2 , lambda: unlockExit())
+           
+            
+
+        return popUp
+    def show(self):
+        return self.popUp
+   
+        
+             
+        
 
 
-class AdsPermanent(): #objet ad fickle
+class AdsFickle(): #objet ad fickle
     def __init__(self,dataAds):
         self.name = random.choice(dataAds.getAdNameListF())
         if dataAds.getAdSpecificF(self.name)["sound"]:
-            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
+             pass
+            #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
                 
      
-#app = ctk.CTk()
-#app.geometry("800x400")
+app = ctk.CTk()
+#pg.mixer.init()
+app.geometry("800x400")
+data1 = DataAds("ads/dataAds(Sheet1).csv")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
-#app.mainloop()
+ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
 
-pg.mixer.init()
-soundtest = Sounds("sfx/tester3.wav")
+app.mainloop()
+
+
+#soundtest = Sounds("sfx/tester3.wav")
 #soundtest = pg.mixer.Sound("ads/tester3.wav")
-soundtest.play()
+#soundtest.play()
 
 
 #data1 = DataAds("ads/dataAds(Sheet1).csv") #jsp honestly
