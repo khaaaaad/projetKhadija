@@ -6,8 +6,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import Image  # cest une librairie qui manipule les images png, jpg etc
 from classes_Émilie import Timer
-
-
+import pygame as pg
+import time
 
 class Data():
     def __init__(self,file):
@@ -428,7 +428,28 @@ class GifImage(ctk.CTkFrame): #OPTIONELLE A REVOIR ET TESTER SI CA FONCTIONNE
                 count = 0 # on reset le compte pour qu'on puisse loop apres
             self.showAnim = self.master.after(self.wait, lambda: animation(count) ) # on attend self.wait de seconde avant de refaire la fonction: de plus lambda fais que la fct ne s'eexecute pas immediatement, et d'attendre jusqu'a ce que la condition soit satisfaite
         animation(0) # on fait demarer lanimation le zero cest le debut soit le count 0
+class Sounds():
+    def __init__(self,file):
+        self.file = self.checkFile(file)
+        self.sfx = pg.mixer.Sound(self.file)
 
+
+    def checkFile(self,file): #avant meme de commencer on check si l'image n'a pas de probleme
+            try:
+                pg.mixer.Sound(file)
+            except Exception as e:
+                print(e)
+                return None
+            return file
+    def getSfx(self):
+         return self.sfx
+    def play(self):
+        self.getSfx().play()
+        time.sleep(2) # need to fix this lowkey
+         
+    # to play insert getsfx.play()
+        
+         
 #app = ctk.CTk()
 #app.geometry("800x400")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
@@ -437,8 +458,10 @@ class GifImage(ctk.CTkFrame): #OPTIONELLE A REVOIR ET TESTER SI CA FONCTIONNE
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
 #app.mainloop()
 
-
-
+pg.mixer.init()
+soundtest = Sounds("ads/tester3.wav")
+#soundtest = pg.mixer.Sound("ads/tester3.wav")
+soundtest.play()
 
 
 #data1 = DataAds("ads/dataAds(Sheet1).csv") #jsp honestly
