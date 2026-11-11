@@ -5,7 +5,7 @@ import customtkinter as ctk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import Image  # cest une librairie qui manipule les images png, jpg etc
-from classes_Émilie import Timer
+from classes_Émilie import Timer # pas la meme chose que timer
 import pygame as pg
 import time
 
