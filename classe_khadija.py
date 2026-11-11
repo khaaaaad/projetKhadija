@@ -509,9 +509,7 @@ class AdsFickle(): #objet ad fickle
              pass
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
-class AlertPopUp():
-    pass
-     
+   
 app = ctk.CTk()
 #pg.mixer.init()
 app.geometry("800x400")
