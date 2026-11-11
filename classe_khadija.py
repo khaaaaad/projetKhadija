@@ -84,7 +84,68 @@ class Data():
         return self.fishEncyclopedia[name] # retourne les stats du poissons (dans un dictionnaire)
     def getTrashSpecific(self,name):
         return self.trash[name] #retourne les stats du dechets dans un dictionnaire
-        
+
+class DataAds():
+    def __init__(self,file):
+        self.file = str(file) #file lien/nom
+        self.dataFrame = self.readFile() # cest le dataframe soit le tableau en version pandas
+    
+        if self.dataFrame is not None:
+            #print(self.dataFrame) test1
+            self.adLibraryPermanent, self.adLibraryFickle = self.adLibrary() # executer direct apres init + cest un dictionnaire
+            #print(self.adLibraryPermanent) test2
+
+    def readFile(self): #transporter le csv à un dataFrame
+            try:
+                df = pd.read_csv(self.file, delimiter = ';')
+                df = pd.DataFrame(df) #conversion au dataframe/ tableau plus beau
+            except Exception as e:
+                print(e)
+                return None
+                        
+            return df 
+    def adLibrary(self): # initialiser le dictionnaire des publicités
+            adDictPermanent = {}
+            adDictFickle = {}
+            for i in range(len(self.dataFrame)):
+                if self.dataFrame.at[i,"permanent"] == True: #seulement les permanents
+                    name = self.dataFrame.iloc[i, 0]
+                    value = self.dataFrame.iloc[i, 1:].to_dict() # dict dans un dict
+                    adDictPermanent[name] = value # exemple: poisson rouge : weight: 23 size: 4 etcetc il n ya pas le nom du poisson dans le dict, lmk si cela pose des problemes
+                else:
+                    name = self.dataFrame.iloc[i, 0]
+                    value = self.dataFrame.iloc[i, 1:].to_dict() # dict dans un dict
+                    adDictFickle[name] = value # exemple: poisson rouge : weight: 23 size: 4 etcetc il n ya pas le nom du poisson dans le dict, lmk si cela pose des problemes
+                                   
+            return adDictPermanent, adDictFickle
+    
+    def getAdLibraryPermanent(self):
+        return self.adLibraryPermanent # retourne un dictionnaire le gros truc
+    def getAdLibraryFickle(self):
+        return self.adLibraryFickle
+    def getAdNameListP(self): # liste des noms des pubs permanentes
+            ads = [name for name in self.adLibraryPermanent.keys()]
+            return ads
+    def getAdNameListF(self): # liste des noms des pubs 
+                ads = [name for name in self.adLibraryFickle.keys()]
+                return ads
+    def getAllNamesList(self):
+                all = []
+                all.extend(self.getAdNameListP())
+                all.extend(self.getAdNameListF())
+                return all
+    def getAdSpecificStatsListP(self, name): 
+           valueDict = self.adLibraryPermanent[name] 
+           AdStats = [value for value in valueDict.values()]
+           return AdStats
+    def getAdSpecificStatsListF(self, name): 
+            valueDict = self.adLibraryFickle[name] 
+            AdStats = [value for value in valueDict.values()]
+            return AdStats 
+    def getAdSpecificP(self, name):
+            return self.adLibraryPermanent[name]
+    def getAdSpecificF(self, name):
+                return self.adLibraryFickle[name]
 class SavingSystem():
     def __init__(self, user,file,data):
         
@@ -380,7 +441,7 @@ class GifImage(ctk.CTkFrame): #OPTIONELLE A REVOIR ET TESTER SI CA FONCTIONNE
 
 
 
-#data1 = Data("assets/fishEncylopedia3.csv") #jsp honestly
+#data1 = DataAds("ads/dataAds(Sheet1).csv") #jsp honestly
 #print(data1.getFishEncyclopedia())
 
 #le lien du fichier ne fonctionne pas correctement, faut voir cest quoi le probleme avec le fichier
