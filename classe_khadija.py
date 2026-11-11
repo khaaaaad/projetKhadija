@@ -448,18 +448,32 @@ class Sounds():
         time.sleep(2) # need to fix this lowkey
          
     # to play insert getsfx.play()      
+
+def randomAdvertisement():
+    data1 = DataAds("ads/dataV2.csv")
+    ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
+
+
+    delay = random.randint(15000, 30000)
+    app.after(delay, randomAdvertisement)
+
 class AdsPermanent(ctk.CTkFrame): # objet ad permanent
     def __init__(self,master,dataAds,height,width):
         super().__init__(master)
         self.master = master
-        self.name = random.choice(dataAds.getAdNameListP())
+
+        self.name = str(random.choice(dataAds.getAdNameListP()))
         self.sound = None
         #if dataAds.getAdSpecificP(self.name)["sound"]:
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
         self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
         self.height = height
         self.width = width
-        self.timer = None
+        self.imageFile = dataAds.getAdSpecificP(self.name)["image"] #image link
+        self.image = ImageConfig(self.imageFile, self.imageFile,self.width,self.height)       
+        self.img_label = None
+        self.x = random.randint(0,800) # check what it is exactly
+        self.y = random.randint(0,400)
         self.popUp = self.createPopUp()
         self.show()
         self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
@@ -474,8 +488,12 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         popUp = None
         popUp = ctk.CTkToplevel(self.master, fg_color= "white")
         popUp.title("PUBLICITÉ!1!1")
-        popUp.geometry(f"{self.width}x{self.height}") # check if the order is correct
+        popUp.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}") # check if the order is correct
+        self.img_label = ctk.CTkLabel(popUp, text = '', image = self.image.getImage())         
+        self.img_label.place(x = 0, y = 0)
+                
         popUp.resizable(False,False)
+        
         if self.skippable:
             #dont forget to add the picture
             if self.sound != None:
@@ -513,18 +531,19 @@ class AdsFickle(): #objet ad fickle
 app = ctk.CTk()
 #pg.mixer.init()
 app.geometry("800x400")
-data1 = DataAds("ads/dataAds(Sheet1).csv")
+#data1 = DataAds("ads/dataV2.csv")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
-ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
+#ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
 
+app.after(30, randomAdvertisement) 
 app.mainloop()
-
+  
 
 #soundtest = Sounds("sfx/tester3.wav")
-#soundtest = pg.mixer.Sound("ads/tester3.wav")
+#soundtest = pg.mixer.Sound("sfx/tester3.wav")
 #soundtest.play()
 
 

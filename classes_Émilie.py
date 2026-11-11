@@ -311,10 +311,10 @@ class Timer():
             secondsLeft = int(timeLeft)
 
             #prendre la partie après la virgule et on la multiplie par 100 car on l'utilise comme un entier
-            millisecondsLeft = int((timeLeft - secondsLeft) * 100)
+            #millisecondsLeft = int((timeLeft - secondsLeft) * 100) #supprimer
 
             #mettre à jour la légende (le 02d c'est pour 2 décimales)
-            self.label.configure(text=f"{secondsLeft:02d}.{millisecondsLeft:02d} sec")
+            self.label.configure(text=f"{secondsLeft:02d}") # self.label.configure(text=f"{secondsLeft:02d})
                                 
             #rafraîchir toutes les 10 ms pour que le défilement soit fluide
             self.master.after(10, self.updateTimerWithPrint)
@@ -324,9 +324,9 @@ class Timer():
         else:
 
             #change la légende 
-            self.label.configure(text="C'est fini !")
+            #self.label.configure(text="C'est fini !")
             self.isFinished = True
-            self.master.after(3*1000, self.autoDestruct)
+            self.master.after(1, self.autoDestruct)
 
             
     #timer sans affichage du compte-à-rebours

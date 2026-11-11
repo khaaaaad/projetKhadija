@@ -1,0 +1,6 @@
+﻿ad;sound;skip;permanent;soundName;Gif;image;;imageSize
+adrien;TRUE;TRUE;FALSE;sfx/adrien.wav;FALSE;ads/adrien.jpeg;;
+comiteArt;TRUE;FALSE;TRUE;sfx/comiteArt.wav;FALSE;ads/comiteArt.jpeg;;
+subwaySurfer;TRUE;FALSE;TRUE;sfx/subwaySurfer.wav;FALSE;ads/subwaySurfer.jpeg;;
+familyGuy;FALSE;TRUE;FALSE;sfx/familyGuy.wav;FALSE;ads/familyGuy.jpeg;;
+theContouring;TRUE;TRUE;FALSE;sfx/theContouring.wav;FALSE;ads/theContouring.jpeg;;
