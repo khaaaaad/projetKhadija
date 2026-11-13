@@ -417,7 +417,7 @@ class GifImage(ctk.CTkFrame): #OPTIONELLE A REVOIR ET TESTER SI CA FONCTIONNE
             openImg.seek(i)
             img.append(ctk.CTkImage(light_image= openImg.copy(), size=(self.width, self.height)))
         gifLabel = ctk.CTkLabel(self.master, text = "",width = self.width, height = self.height) # on revient avec ctk pour que ca soit compatible
-        gifLabel.place(x = self.x, y = self.y) # ou le placer
+        gifLabel.pack(padx = self.x, pady = self.y) # ou le placer
                  
         def animation(count):
             newImg = img[count] # on commence avec ce frame precis

@@ -293,12 +293,14 @@ class GameScreen(ctk.CTkFrame):
 
         #NE FONCTIONNE PAS POUR L'INSTANT
         ##le gif de l'environnement
-        #environment_gif = GifImage(self.center_panel,"assets/ocean.gif", 100, 100, 5)
+        #environment_gif = GifImage(master = self.center_panel,file="assets/lake.gif", x=100, y=100,width=360,height=360,wait=30)
+                
+        environment_gif = GifImage(master = self.center_panel,file="assets/lake.gif", x=5, y=5,width=320,height=320,wait=30)
         #environment_gif.pack(pady = 5, padx = 5)
-        path = r"assets/Enviro.png"
-        environment_img = ImageConfig(path,path,360,360)
-        self.environment_label = ctk.CTkLabel(self.center_panel, image=environment_img.getImage(),text = '')
-        self.environment_label.pack()
+        #path = r"assets/lake.gif"
+        #environment_img = GifImage(self.center_panel,path,0,0,360,360)
+        #self.environment_label = ctk.CTkLabel(self.center_panel, image=environment_img,text = '')
+        #self.environment_label.pack()
         ##bar de progression
         self.reel_bar = ctk.CTkProgressBar(
                                             self.center_panel, 
