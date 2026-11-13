@@ -311,10 +311,10 @@ class Timer():
             secondsLeft = int(timeLeft)
 
             #prendre la partie après la virgule et on la multiplie par 100 car on l'utilise comme un entier
-            #millisecondsLeft = int((timeLeft - secondsLeft) * 100) #supprimer
+            millisecondsLeft = int((timeLeft - secondsLeft) * 100) #supprimer
 
             #mettre à jour la légende (le 02d c'est pour 2 décimales)
-            self.label.configure(text=f"{secondsLeft:02d}") # self.label.configure(text=f"{secondsLeft:02d})
+            self.label.configure(text=f"{secondsLeft:02d}.{millisecondsLeft:02d} sec") # self.label.configure(text=f"{secondsLeft:02d})
                                 
             #rafraîchir toutes les 10 ms pour que le défilement soit fluide
             self.master.after(10, self.updateTimerWithPrint)
@@ -327,7 +327,36 @@ class Timer():
             #self.label.configure(text="C'est fini !")
             self.isFinished = True
             self.master.after(1, self.autoDestruct)
-
+    def updateTimerWithPrintAds(self):
+            currentTime = time.time()
+    
+            #si la légende n'a pas encore été détruit (autoDestruct) et on n'est pas encore rendu à la fin
+            if not self.isFinished and currentTime < self.end:
+    
+                #mettre à jour le temps restant avant la fin du compte-à-rebours
+                timeLeft = self.end - currentTime
+    
+                #séparer les secondes et les millisecondes
+                secondsLeft = int(timeLeft)
+    
+                #prendre la partie après la virgule et on la multiplie par 100 car on l'utilise comme un entier
+                #millisecondsLeft = int((timeLeft - secondsLeft) * 100) #supprimer
+    
+                #mettre à jour la légende (le 02d c'est pour 2 décimales)
+                self.label.configure(text=f"{secondsLeft:02d}") # self.label.configure(text=f"{secondsLeft:02d})
+                                    
+                #rafraîchir toutes les 10 ms pour que le défilement soit fluide
+                self.master.after(10, self.updateTimerWithPrint)
+                
+    
+            #si c'est terminé
+            else:
+    
+                #change la légende 
+                #self.label.configure(text="C'est fini !")
+                self.isFinished = True
+                self.master.after(1, self.autoDestruct)
+    
             
     #timer sans affichage du compte-à-rebours
     def updatetimerWithoutPrint(self):
