@@ -564,7 +564,7 @@ data1 = DataAds("ads/dataV2.csv")
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
-ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200))
+#ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
 
 app.after(30, randomAdvertisement) 
 app.mainloop()

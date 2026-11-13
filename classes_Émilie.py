@@ -346,7 +346,7 @@ class Timer():
                 self.label.configure(text=f"{secondsLeft:02d}") # self.label.configure(text=f"{secondsLeft:02d})
                                     
                 #rafraîchir toutes les 10 ms pour que le défilement soit fluide
-                self.master.after(10, self.updateTimerWithPrint)
+                self.master.after(10, self.updateTimerWithPrintAds)
                 
     
             #si c'est terminé
