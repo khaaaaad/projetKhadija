@@ -562,6 +562,16 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             self.y = 675
             self.width = 500
             self.height = 50
+        elif self.order == 4:
+            self.x = 800
+            self.y = 175
+            self.width = 300
+            self.height = 20
+        elif self.order == 5:
+            self.x = 0
+            self.y = 0
+            self.width = 1000
+            self.height = 800
         else:
             print("order doesn't exist")
 

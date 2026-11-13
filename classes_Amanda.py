@@ -84,6 +84,7 @@ class TitleScreen(ctk.CTkFrame):
         self.ad2 = AdsPermanent(self.master,data1,100,100,True,2)
         self.ad3 = AdsPermanent(self.master,data1,100,100,True,3)
 
+
     def on_play(self):
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
@@ -93,6 +94,7 @@ class TitleScreen(ctk.CTkFrame):
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
         self.ad3.deleteBanner()
+        
         self.master.show_frame(newGameScreen)
 
     def on_load(self):
@@ -152,7 +154,7 @@ class newGameScreen(ctk.CTkFrame):
             width=260
         )
         self.button.pack(pady=(15, 25))
-
+              
     def on_next(self):
         name = self.entry.get().strip()
         if name == "":
@@ -182,7 +184,10 @@ class GameScreen(ctk.CTkFrame):
         self.create_left_panel()
         self.create_center_panel()
         self.create_right_panel()
-        
+         # revoir comment ne pas avoir refaire le data chaque fois
+        data1 = DataAds("ads/dataV2.csv")
+        self.ad4 = AdsPermanent(self.master,data1,100,100,True,4)
+                 
 
     ############################
     # La barre d'en haut (menu)#
@@ -201,8 +206,9 @@ class GameScreen(ctk.CTkFrame):
        self.load_btn = ctk.CTkButton(self.top_menu, text = 'Charger', command = self.on_load,fg_color="#52796f", hover_color="#3d5a45", corner_radius=8)
        self.load_btn.pack(padx = 10, side = 'left')
 
-        #Bouton Stats
-       self.stats_btn = ctk.CTkButton(self.top_menu, text = 'Statistiques du jeu', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+       #Bouton Stats
+       
+       self.stats_btn = ctk.CTkButton(self.top_menu, text = 'Options', command = self.create_panel_option,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
        self.stats_btn.pack(padx = 10, side = 'left')
 
        #Bouton retour
@@ -215,6 +221,20 @@ class GameScreen(ctk.CTkFrame):
     #####################################
     #Colonne gauche, joueur + inventaire#
     #####################################
+    def create_panel_option(self):
+        window = ctk.CTkToplevel(self.master, fg_color= "white")
+        window.geometry(f"140x200+565+200") 
+        window.resizable(False,False)
+        window.overrideredirect(True) # removes the small bar in the top
+
+         #Bouton Stats
+        self.stats_btn = ctk.CTkButton(window, text = 'Stats', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        self.stats_btn.pack(padx = 10, side = 'left')
+         #Bouton Enlever pubs
+        self.pub_btn = ctk.CTkButton(window, text = 'Stats', command = print("implemente la fenetre"),fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        self.pub_btn.pack(padx = 10,pady= 20, side = 'left')
+                           
+                
     def create_left_panel(self):
         #Creation du l'écran de gauche
         self.left_panel = ctk.CTkFrame(self.main_container,fg_color="#9fb498")
@@ -504,7 +524,8 @@ class GameScreen(ctk.CTkFrame):
         self.main_container.pack(expand=True, fill="both", padx=10, pady=5)
 
     def on_return(self):
-        
+
+        self.ad4.deleteBanner()
         #arrete le timer s'il roulait encore
         if self.fishing_timer is not None:
             self.fishing_timer.stop()
