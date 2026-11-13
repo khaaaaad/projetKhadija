@@ -291,7 +291,7 @@ class GameScreen(ctk.CTkFrame):
         environment_name_label.pack(padx = 5, pady = 5,side = 'left')
         
 
-        #NE FONCTIONNE PAS POUR L'INSTANT
+        #GIF FONCTIONNE 
         ##le gif de l'environnement
         #environment_gif = GifImage(master = self.center_panel,file="assets/lake.gif", x=100, y=100,width=360,height=360,wait=30)
                 
