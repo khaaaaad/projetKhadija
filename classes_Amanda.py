@@ -82,15 +82,17 @@ class TitleScreen(ctk.CTkFrame):
         data1 = DataAds("ads/dataV2.csv")
         self.ad1 = AdsPermanent(self.master,data1,100,100,True,1)
         self.ad2 = AdsPermanent(self.master,data1,100,100,True,2)
-        
+        self.ad3 = AdsPermanent(self.master,data1,100,100,True,3)
 
     def on_play(self):
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
+        self.ad3.deleteBanner()
         self.master.show_frame(GameScreen)
     def on_new_play(self):
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
+        self.ad3.deleteBanner()
         self.master.show_frame(newGameScreen)
 
     def on_load(self):
@@ -103,6 +105,7 @@ class TitleScreen(ctk.CTkFrame):
     def credit_frame(self):
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
+        self.ad3.deleteBanner()
         self.master.show_frame(CreditScreen)
 
     
