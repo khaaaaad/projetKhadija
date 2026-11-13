@@ -8,9 +8,11 @@ Chaque frame est une classe, ce qui simplifie la programmation et la rend claire
 
 import customtkinter as ctk
 from classes_Émilie import User, Catch, Timer
-from classe_khadija import ImageConfig, Data, SavingSystem, GifImage
+from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent
 from PIL import Image, ImageEnhance
 import sys
+import pygame as pg
+pg.mixer.init()
 
 ##Pour les stats
 import matplotlib.pyplot as plt
@@ -76,6 +78,10 @@ class TitleScreen(ctk.CTkFrame):
 
         self.quit_btn = ctk.CTkButton(self.menu_card, text='Quitter', font=btn_font, width=btn_w, height=btn_h, corner_radius=btn_rad, fg_color="#8b3a3a", hover_color="#632525", command=self.master.on_closing)    
         self.quit_btn.pack(pady=(5, 25))
+        #Pubs banner propre au écran principale
+        data1 = DataAds("ads/dataV2.csv")
+        ad1 = AdsPermanent(self.master,data1,100,100,True,1)
+        
 
     def on_play(self):
         self.master.show_frame(GameScreen)
@@ -105,6 +111,7 @@ class newGameScreen(ctk.CTkFrame):
         # Titre
         title = ctk.CTkLabel(self.card, text="Bienvenue dans Fish le poisson !", font=("arial", 20, "bold"), text_color="#1f2937")
         title.pack(pady=(25,10), padx=30)
+        
 
         # explication du jeu
         intro_text = (
@@ -143,7 +150,7 @@ class newGameScreen(ctk.CTkFrame):
         else:
             self.master.user.setUserName(name)
             self.master.show_frame(GameScreen)
-
+    
 class GameScreen(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)

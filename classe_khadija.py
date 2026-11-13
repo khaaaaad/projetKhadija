@@ -468,7 +468,7 @@ def randomAdvertisement():
     app.after(delay, randomAdvertisement)
 
 class AdsPermanent(ctk.CTkFrame): # objet ad permanent
-    def __init__(self,master,dataAds,height,width,banner):
+    def __init__(self,master,dataAds,height,width,banner,order):
         super().__init__(master)
         self.master = master
 
@@ -476,8 +476,11 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         self.sound = None
         self.soundName = dataAds.getAdSpecificP(self.name)["soundName"]
         self.banner = banner
+        self.order = order
+
         if dataAds.getAdSpecificP(self.name)["sound"]:
-           self.sound = Sounds(f"{self.soundName}")    
+           self.sound = Sounds(f"{self.soundName}")   
+
         self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
         self.height = height
         self.width = width
@@ -485,9 +488,11 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         self.y = 0
         self.dataAds = dataAds
         self.imageFile = dataAds.getAdSpecificP(self.name)["image"] #image link
+
         if self.dataAds.getAdSpecificP(self.name)["Gif"] == False:
             self.image = ImageConfig(self.imageFile, self.imageFile,self.width,self.height)       
             self.img_label = None
+
         if self.banner == False:
             self.x = random.randint(0,800) # check what it is exactly
             self.y = random.randint(0,400)
@@ -495,7 +500,8 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             self.show()
             self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
         else:
-            self.createBanner()
+            self.popUp = self.createBanner()
+            self.popUp.transient(self.master)
         
         
         #implement the window and the image/gif preferable add a if gif option true or false
@@ -539,9 +545,32 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
            
         return popUp
     def createBanner(self):
-        pass
+        popUp = None
+        popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+        if self.order == 1 : # ad number one will be at the bottom
+            self.x = 250
+            self.y = 250
+            self.width = 100
+            self.height = 400
+        else:
+            print("order doesn't exist")
+
+        popUp.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}") # check if the order is correct
+        if self.dataAds.getAdSpecificP(self.name)["Gif"] == False:
+            self.img_label = ctk.CTkLabel(popUp, text = '', image = self.image.getImage())         
+            self.img_label.place(x = 0, y = 0)
+        else:
+            self.gifImg = GifImage(popUp, self.imageFile,0,0,self.width,self.height,20)
+                        
+        popUp.resizable(False,False)
+        popUp.overrideredirect(True) # removes the small bar in the top
+        popUp.update_idletasks() # so that it doesnt show up empty (without the image)
+        return popUp
+               
     def show(self):
         return self.popUp
+    def deleteBanner(self):
+        self.popUp.destroy()
    
         
              
@@ -556,18 +585,18 @@ class AdsFickle(): #objet ad fickle
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
    
-app = ctk.CTk()
-pg.mixer.init()
-app.geometry("800x400")
-data1 = DataAds("ads/dataV2.csv")
+#app = ctk.CTk()
+#pg.mixer.init()
+#app.geometry("800x400")
+#data1 = DataAds("ads/dataV2.csv")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
 #ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
-
-app.after(30, randomAdvertisement) 
-app.mainloop()
+#ad2 = AdsPermanent(app,data1,100,100,True,1)
+#app.after(30, randomAdvertisement) 
+#app.mainloop()
   
 
 #soundtest = Sounds("sfx/tester3.wav")
