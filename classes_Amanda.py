@@ -80,12 +80,17 @@ class TitleScreen(ctk.CTkFrame):
         self.quit_btn.pack(pady=(5, 25))
         #Pubs banner propre au écran principale
         data1 = DataAds("ads/dataV2.csv")
-        ad1 = AdsPermanent(self.master,data1,100,100,True,1)
+        self.ad1 = AdsPermanent(self.master,data1,100,100,True,1)
+        self.ad2 = AdsPermanent(self.master,data1,100,100,True,2)
         
 
     def on_play(self):
+        self.ad1.deleteBanner()
+        self.ad2.deleteBanner()
         self.master.show_frame(GameScreen)
     def on_new_play(self):
+        self.ad1.deleteBanner()
+        self.ad2.deleteBanner()
         self.master.show_frame(newGameScreen)
 
     def on_load(self):
@@ -96,6 +101,8 @@ class TitleScreen(ctk.CTkFrame):
             self.master.show_frame(GameScreen)
 
     def credit_frame(self):
+        self.ad1.deleteBanner()
+        self.ad2.deleteBanner()
         self.master.show_frame(CreditScreen)
 
     
