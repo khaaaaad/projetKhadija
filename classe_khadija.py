@@ -432,7 +432,7 @@ class Sounds():
     def __init__(self,file):
         self.file = self.checkFile(file)
         self.sfx = pg.mixer.Sound(self.file)
-
+        self.running = False
 
     def checkFile(self,file): #avant meme de commencer on check si l'image n'a pas de probleme
             try:
@@ -445,7 +445,17 @@ class Sounds():
          return self.sfx
     def play(self):
         self.getSfx().play()
-        time.sleep(2) # need to fix this lowkey
+        self.running = True
+    def playForever(self):
+        self.getSfx().play(loops=-1)
+        self.running = True
+    def stop(self):
+        self.getSfx().stop()
+        self.running = False
+    def getStatus(self):
+        return self.running
+        
+       
          
     # to play insert getsfx.play()      
 
@@ -464,9 +474,10 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
 
         self.name = str(random.choice(dataAds.getAdNameListP()))
         self.sound = None
+        self.soundName = dataAds.getAdSpecificP(self.name)["soundName"]
         self.banner = banner
         if dataAds.getAdSpecificP(self.name)["sound"]:
-            self.sound = Sounds(f"sfx/{dataAds.getAdSpecificP(self.name)["soundName"]}.wav")    
+           self.sound = Sounds(f"{self.soundName}")    
         self.skippable = dataAds.getAdSpecificP(self.name)["skip"]
         self.height = height
         self.width = width
@@ -506,19 +517,25 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         if self.skippable:
             #dont forget to add the picture
             if self.sound != None:
-                self.sound.play()
+                self.sound.playForever() # check this again
         else:
             popUp.overrideredirect(True) # removes the small bar in the top
             self.timer = Timer(popUp,10)
             self.timer.updateTimerWithPrint()
             if self.sound != None:
-                self.sound.play()
+                self.sound.playForever()
             
+            def checkButton():
+                popUp.destroy()
+                self.sound.stop()
             
             def unlockExit():
-                exitButton = ctk.CTkButton(popUp, text= "Quitter", command= lambda: popUp.destroy(), fg_color= "red")
+                exitButton = ctk.CTkButton(popUp, text= "Quitter", command= lambda: checkButton(), fg_color= "red")
                 exitButton.pack(padx = 10, side = 'left')
+                
+            
             popUp.after((self.timer.getSeconds() * 1000) + 2 , lambda: unlockExit())
+            
            
         return popUp
     def createBanner(self):
