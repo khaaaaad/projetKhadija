@@ -458,7 +458,32 @@ class Sounds():
        
          
     # to play insert getsfx.play()      
-
+class Music():
+    def __init__(self,file):
+        self.checkFile(file)
+        self.running = False
+   
+    def checkFile(self,file): #avant meme de commencer on check si l'image n'a pas de probleme
+        try:
+            pg.mixer.music.load(file)
+        except Exception as e:
+            print(e)
+            return None
+        return pg.mixer.music.load(file)
+    def play(self):
+        pg.mixer.music.play()
+        self.running = True
+    def playForever(self):
+        pg.mixer.music.play(loops=-1)
+        self.running = True
+    def stop(self):
+        pg.mixer.music.stop()
+        self.running = False
+    def getStatus(self):
+        return self.running
+           
+          
+             
 def randomAdvertisement():
     data1 = DataAds("ads/dataV2.csv")
     ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
@@ -606,18 +631,24 @@ class AdsFickle(): #objet ad fickle
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
    
-app = ctk.CTk()
+#app = ctk.CTk()
 pg.mixer.init()
-app.geometry("800x400")
-data1 = DataAds("ads/dataV2.csv")
+#app.geometry("800x400")
+#data1 = DataAds("ads/dataV2.csv")
+#music = Music("sfx/background.wav")
+#music.play()
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
 #ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 #ad2 = AdsPermanent(app,data1,100,100,True,1)
-app.after(30, randomAdvertisement) 
-app.mainloop()
+#app.after(30, randomAdvertisement) 
+
+clickBtnSfx = Sounds("sfx/button.wav")
+#clickBtnSfx.play()
+
+#app.mainloop()
   
 
 #soundtest = Sounds("sfx/tester3.wav")

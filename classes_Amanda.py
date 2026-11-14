@@ -8,7 +8,7 @@ Chaque frame est une classe, ce qui simplifie la programmation et la rend claire
 
 import customtkinter as ctk
 from classes_Émilie import User, Catch, Timer
-from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent
+from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent,Music
 from PIL import Image, ImageEnhance
 import sys
 import pygame as pg
@@ -19,12 +19,12 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-
 class TitleScreen(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
         #image pour le background
+        self.clickBtnSfx = Sounds("sfx/button.wav")
         bg = ImageConfig(r"assets/mainMenu.jpeg",r"assets/mainMenu.jpeg", self.master.window_width,self.master.window_height)
 
         self.bg_label = ctk.CTkLabel(self, text = '', image = bg.getImage())
@@ -86,6 +86,8 @@ class TitleScreen(ctk.CTkFrame):
 
 
     def on_play(self):
+        self.clickBtnSfx.play()
+
         self.ad1.deleteBanner()
         self.ad2.deleteBanner()
         self.ad3.deleteBanner()
@@ -167,6 +169,8 @@ class GameScreen(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
+        self.music = Music("sfx/background.wav")
+        self.music.playForever()
         # Création du la barre d'en haut (menu)
         self.create_top_bar()
 
@@ -533,6 +537,7 @@ class GameScreen(ctk.CTkFrame):
             self.after_cancel(self.escape_job)
 
         # Revient à l'écran titre
+        self.music.stop()
         self.master.show_frame(TitleScreen)
 
     def selected_fish(self,fish_name):
