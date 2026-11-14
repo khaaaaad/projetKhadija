@@ -461,7 +461,7 @@ class Sounds():
 
 def randomAdvertisement():
     data1 = DataAds("ads/dataV2.csv")
-    ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
+    ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 
 
     delay = random.randint(15000, 30000)
@@ -614,7 +614,7 @@ data1 = DataAds("ads/dataV2.csv")
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
-ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
+#ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 #ad2 = AdsPermanent(app,data1,100,100,True,1)
 app.after(30, randomAdvertisement) 
 app.mainloop()
