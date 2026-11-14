@@ -606,18 +606,18 @@ class AdsFickle(): #objet ad fickle
             #self.sound = Sounds(f"sfx/{dataAds.getAdSpecificF(self.name)["soundName"]}.wav")
         self.skippable = dataAds.getAdSpecificF(self.name)["skip"]
    
-#app = ctk.CTk()
-#pg.mixer.init()
-#app.geometry("800x400")
-#data1 = DataAds("ads/dataV2.csv")
+app = ctk.CTk()
+pg.mixer.init()
+app.geometry("800x400")
+data1 = DataAds("ads/dataV2.csv")
 #img1 = ImageConfig("assets/mainMenu.jpeg","assets/mainMenu.jpeg",800,400)
 #my_label = ctk.CTkLabel(app, text="", image=img1.getImage())
 #my_label.pack(pady=10)
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
-#ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
+ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False)
 #ad2 = AdsPermanent(app,data1,100,100,True,1)
-#app.after(30, randomAdvertisement) 
-#app.mainloop()
+app.after(30, randomAdvertisement) 
+app.mainloop()
   
 
 #soundtest = Sounds("sfx/tester3.wav")
