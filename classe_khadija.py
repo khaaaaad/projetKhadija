@@ -588,8 +588,8 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             self.width = 500
             self.height = 50
         elif self.order == 4:
-            self.x = 800
-            self.y = 175
+            self.x = 725
+            self.y = 165
             self.width = 300
             self.height = 20
         elif self.order == 5:
@@ -644,8 +644,7 @@ pg.mixer.init()
 #ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 #ad2 = AdsPermanent(app,data1,100,100,True,1)
 #app.after(30, randomAdvertisement) 
-
-clickBtnSfx = Sounds("sfx/button.wav")
+#clickBtnSfx = Sounds("sfx/button.wav")
 #clickBtnSfx.play()
 
 #app.mainloop()

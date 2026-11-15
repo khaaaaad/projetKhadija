@@ -212,8 +212,8 @@ class GameScreen(ctk.CTkFrame):
 
        #Bouton Stats
        
-       self.stats_btn = ctk.CTkButton(self.top_menu, text = 'Options', command = self.create_panel_option,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
-       self.stats_btn.pack(padx = 10, side = 'left')
+       self.option_btn = ctk.CTkButton(self.top_menu, text = 'Options', command = self.create_panel_option,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+       self.option_btn.pack(padx = 10, side = 'left')
 
        #Bouton retour
        self.back_btn = ctk.CTkButton(self.top_menu, text = 'Retourner au menu principal', command = self.on_return,fg_color="#52796f", hover_color="#3d5a45", corner_radius=8)
@@ -230,14 +230,18 @@ class GameScreen(ctk.CTkFrame):
         window.geometry(f"140x200+565+200") 
         window.resizable(False,False)
         window.overrideredirect(True) # removes the small bar in the top
+        
 
          #Bouton Stats
-        self.stats_btn = ctk.CTkButton(window, text = 'Stats', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
-        self.stats_btn.pack(padx = 10, side = 'left')
+        stats_btn = ctk.CTkButton(window, text = 'Stats', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        stats_btn.pack(padx = 10)
          #Bouton Enlever pubs
-        self.pub_btn = ctk.CTkButton(window, text = 'Stats', command = print("implemente la fenetre"),fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
-        self.pub_btn.pack(padx = 10,pady= 20, side = 'left')
+        pub_btn = ctk.CTkButton(window, text = 'Enlever pubs', command = self.on_pubs,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        pub_btn.pack(pady= 50)
                            
+    def create_pub_panel(self):
+        pass
+            
                 
     def create_left_panel(self):
         #Creation du l'écran de gauche
@@ -508,7 +512,7 @@ class GameScreen(ctk.CTkFrame):
 
     def on_stats(self):
 
-        self.stats_btn.configure(text = 'Retourner', command = self.on_return_fishing)
+        self.option_btn.configure(text = 'Retourner', command = self.on_return_fishing)
 
         self.stats_container = ctk.CTkFrame(self, fg_color="#9fb498")
         self.main_container.pack_forget()
@@ -516,15 +520,28 @@ class GameScreen(ctk.CTkFrame):
 
         self.create_stats_panel()
 
-
+    def on_pubs(self):
+    
+            self.option_btn.configure(text = 'Retourner', command = self.on_return_fishing)
+    
+            self.pubs_container = ctk.CTkFrame(self, fg_color="#9fb498")
+            self.main_container.pack_forget()
+            self.pubs_container.pack(expand=True, fill="both", padx=10, pady=5)
+    
+            self.create_pub_panel()
+    
+    
     
 
     def on_return_fishing(self):
         plt.close('all') 
         if hasattr(self, 'stats_container') and self.stats_container.winfo_exists():
             self.stats_container.destroy() 
+        if hasattr(self, 'pubs_container') and self.pubs_container.winfo_exists():
+                    self.pubs_container.destroy() 
+                
 
-        self.stats_btn.configure(text = 'Statistiques du jeu', command = self.on_stats)
+        self.option_btn.configure(text = 'Option', command = self.create_panel_option)
         self.main_container.pack(expand=True, fill="both", padx=10, pady=5)
 
     def on_return(self):
