@@ -8,7 +8,7 @@ Chaque frame est une classe, ce qui simplifie la programmation et la rend claire
 
 import customtkinter as ctk
 from classes_Émilie import User, Catch, Timer
-from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent,Music
+from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent,Music,randomAdvertisement
 from PIL import Image, ImageEnhance
 import sys
 import pygame as pg
@@ -191,7 +191,8 @@ class GameScreen(ctk.CTkFrame):
          # revoir comment ne pas avoir refaire le data chaque fois
         data1 = DataAds("ads/dataV2.csv")
         self.ad4 = AdsPermanent(self.master,data1,100,100,True,4)
-                 
+        self.master.after(10000, lambda:randomAdvertisement(self.master))  
+                
 
     ############################
     # La barre d'en haut (menu)#
@@ -218,29 +219,35 @@ class GameScreen(ctk.CTkFrame):
        #Bouton retour
        self.back_btn = ctk.CTkButton(self.top_menu, text = 'Retourner au menu principal', command = self.on_return,fg_color="#52796f", hover_color="#3d5a45", corner_radius=8)
        self.back_btn.pack(padx = (10,0), side = 'right' )
-
-
+       
        
        
     #####################################
     #Colonne gauche, joueur + inventaire#
     #####################################
     def create_panel_option(self):
-        window = ctk.CTkToplevel(self.master, fg_color= "white")
-        window.geometry(f"140x200+565+200") 
-        window.resizable(False,False)
-        window.overrideredirect(True) # removes the small bar in the top
+        self.window = ctk.CTkToplevel(self.master, fg_color= "white")
+        self.window.geometry(f"140x200+565+200") 
+        self.window.resizable(False,False)
+        self.window.overrideredirect(True) # removes the small bar in the top
         
 
          #Bouton Stats
-        stats_btn = ctk.CTkButton(window, text = 'Stats', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
-        stats_btn.pack(padx = 10)
+        stats_btn = ctk.CTkButton(self.window, text = 'Stats', command = self.on_stats,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        stats_btn.pack(pady =30)
          #Bouton Enlever pubs
-        pub_btn = ctk.CTkButton(window, text = 'Enlever pubs', command = self.on_pubs,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
-        pub_btn.pack(pady= 50)
+        pub_btn = ctk.CTkButton(self.window, text = 'Enlever pubs', command = self.on_pubs,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
+        pub_btn.pack()
                            
     def create_pub_panel(self):
-        pass
+        # to draw green background canvas
+        canvas = FigureCanvasTkAgg(fig, master=self.pubs_container)
+        canvas.draw()
+        canvas.get_tk_widget().pack(expand=True, fill="both", padx=10, pady=10)
+
+        self.center_panel = ctk.CTkFrame(self.main_container,fg_color="#9fb498")
+        self.center_panel.grid(row = 0, column = 1, sticky = 'nsew', pady = 5, padx = 5)
+        
             
                 
     def create_left_panel(self):
@@ -517,18 +524,18 @@ class GameScreen(ctk.CTkFrame):
         self.stats_container = ctk.CTkFrame(self, fg_color="#9fb498")
         self.main_container.pack_forget()
         self.stats_container.pack(expand=True, fill="both", padx=10, pady=5)
-
+        self.window.destroy()
         self.create_stats_panel()
 
     def on_pubs(self):
     
-            self.option_btn.configure(text = 'Retourner', command = self.on_return_fishing)
+        self.option_btn.configure(text = 'Retourner', command = self.on_return_fishing)
     
-            self.pubs_container = ctk.CTkFrame(self, fg_color="#9fb498")
-            self.main_container.pack_forget()
-            self.pubs_container.pack(expand=True, fill="both", padx=10, pady=5)
-    
-            self.create_pub_panel()
+        self.pubs_container = ctk.CTkFrame(self, fg_color="#9fb498")
+        self.main_container.pack_forget()
+        self.pubs_container.pack(expand=True, fill="both", padx=10, pady=5)
+        self.window.destroy()
+        self.create_pub_panel()
     
     
     
@@ -737,7 +744,7 @@ class GameScreen(ctk.CTkFrame):
                                     state = 'normal',
                                     fg_color="#dee6ed")
         self.reel_bar.set(0)
-        
+       
 
                     
                 

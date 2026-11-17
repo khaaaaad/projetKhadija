@@ -1,0 +1,5 @@
+Name,Weight,Size,IsFish,Description,Rarity,TimeFishing,Username,Level,Status
+Garpique alligator,32.038,205.674,True,"Longévité : 30 ans, Régime : Carnivore, Statut : Préoccupation mineure",uncommon,10,mimi,2,False
+Amphilophus labiatus,0.806,27.133,True,"Longévité : 10 ans, Régime : Omnivore, Statut : Non évalué",rare,10,mimi,2,False
+Killi géant d'Anatolie,0.006,5.385,True,"Longévité : 4 ans, Régime : Carnivore, Statut : Quasi menacée",rare,10,mimi,2,False
+disque de CD,0.019,12.0,False,Je ne pense pas qu'il fonctionne encore.,uncommon,10,mimi,2,False

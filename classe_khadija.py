@@ -484,13 +484,18 @@ class Music():
            
           
              
-def randomAdvertisement():
+def randomAdvertisement(app):
     data1 = DataAds("ads/dataV2.csv")
     ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 
+    if not hasattr(app, 'activeAds'): # or else it will get swept up
+         app.activeAds = []# hasattr check if an object has an attribute or not,  so i gave the app a new attribute, of a list and im gonna store in the list the object ads.
+         app.activeAds.append(ad) # winfo_exists tells us if the window is active or not
+    app.activeAds = [adTemp for adTemp in app.activeAds if adTemp.show().winfo_exists()] #removes the closed ads from the list (its checking the show which returns a popUp so the window Frame of the popup)
 
+             
     delay = random.randint(15000, 30000)
-    app.after(delay, randomAdvertisement)
+    app.after(delay, lambda:randomAdvertisement(app))
 
 class AdsPermanent(ctk.CTkFrame): # objet ad permanent
     def __init__(self,master,dataAds,height,width,banner,order):
@@ -523,10 +528,9 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
             self.y = random.randint(0,400)
             self.popUp = self.createPopUp()
             self.show()
-            self.popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
         else:
             self.popUp = self.createBanner()
-            self.popUp.transient(self.master)
+
         
         
         #implement the window and the image/gif preferable add a if gif option true or false
@@ -536,6 +540,8 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
     def createPopUp(self):
         popUp = None
         popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+        popUp.transient(self.master) # prevent the popup from going behind the screen, so it kind of like it ties it to the main screen
+               
         popUp.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}") # check if the order is correct
         if self.dataAds.getAdSpecificP(self.name)["Gif"] == False:
             self.img_label = ctk.CTkLabel(popUp, text = '', image = self.image.getImage())         
@@ -572,6 +578,7 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
     def createBanner(self):
         popUp = None
         popUp = ctk.CTkToplevel(self.master, fg_color= "white")
+        popUp.transient(self.master)
         if self.order == 1 : # ad number one will be at the bottom
             self.x = 250
             self.y = 250
@@ -643,7 +650,7 @@ pg.mixer.init()
 #fishimg = GifImage(app,"assets/ocean.gif",150, 25, 100, 25, 50) # to fix the sizing
 #ad = AdsPermanent(app,data1,random.randint(100,400),random.randint(50,200),False,0)
 #ad2 = AdsPermanent(app,data1,100,100,True,1)
-#app.after(30, randomAdvertisement) 
+#app.after(10, randomAdvertisement) 
 #clickBtnSfx = Sounds("sfx/button.wav")
 #clickBtnSfx.play()
 
