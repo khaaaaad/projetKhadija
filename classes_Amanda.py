@@ -8,7 +8,7 @@ Chaque frame est une classe, ce qui simplifie la programmation et la rend claire
 
 import customtkinter as ctk
 from classes_Émilie import User, Catch, Timer
-from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent,Music,randomAdvertisement
+from classe_khadija import ImageConfig, Data, SavingSystem, GifImage,DataAds,Sounds,AdsPermanent,Music,randomAdvertisement, Card
 from PIL import Image, ImageEnhance
 import sys
 import pygame as pg
@@ -227,7 +227,8 @@ class GameScreen(ctk.CTkFrame):
     #####################################
     def create_panel_option(self):
         self.window = ctk.CTkToplevel(self.master, fg_color= "white")
-        self.window.geometry(f"140x200+565+200") 
+        
+        self.window.geometry(f"140x200+{self.master.winfo_x() + 330}+{self.master.winfo_y() + 20}") 
         self.window.resizable(False,False)
         self.window.overrideredirect(True) # removes the small bar in the top
         
@@ -238,16 +239,66 @@ class GameScreen(ctk.CTkFrame):
          #Bouton Enlever pubs
         pub_btn = ctk.CTkButton(self.window, text = 'Enlever pubs', command = self.on_pubs,fg_color="#5297A8", hover_color="#3773a3", corner_radius=8)
         pub_btn.pack()
+        
                            
     def create_pub_panel(self):
-        # to draw green background canvas
-        canvas = FigureCanvasTkAgg(fig, master=self.pubs_container)
-        canvas.draw()
-        canvas.get_tk_widget().pack(expand=True, fill="both", padx=10, pady=10)
+        cardUser = Card(0,0,0,0,0,0)
+       # boths widgets
+        self.left_widget = ctk.CTkFrame(self.pubs_container,fg_color="#cbcdc5",width=500,height=500)  
+        self.left_widget.pack(side = 'left',padx= 20)
+        self.right_widget = ctk.CTkFrame(self.pubs_container,fg_color="#cbcdc5",width=500,height=500)  
+        self.right_widget.pack(side = 'right',padx= 20)
+    # title
+        self.header = ctk.CTkFrame(self.left_widget,fg_color="#f1f3eb", width= 300, height= 50)  
+        self.header.place(x= 140,y=20)
+        self.title_pay = ctk.CTkLabel(self.header, text = f'payement', width= 200, height= 50, border_width= 1, border_color= 'black', font= ('Comic Sans MS', 24))
+        self.title_pay.pack()
 
-        self.center_panel = ctk.CTkFrame(self.main_container,fg_color="#9fb498")
-        self.center_panel.grid(row = 0, column = 1, sticky = 'nsew', pady = 5, padx = 5)
+    # options bouton
+    # sub titles
+        self.header_option = ctk.CTkFrame(self.left_widget,fg_color="#f1f3eb", width= 350, height= 50)  
+        self.header_option.place(x= 20,y=120)
+        self.name_text = ctk.CTkLabel(self.header_option, text = f'type de carte', width= 150, height= 30, border_width= 1, border_color= 'black', font= ('Comic Sans MS', 16))
+        self.name_text.pack()
+
+        self.option_button = ctk.CTkOptionMenu(self.left_widget, values=["MasterCard", "Visa", "PayPal"], command= cardUser.setId, button_color='white', fg_color="#e6e7e1", text_color='black')
+        self.option_button.place(x= 20,y=165)
+    # sub titles
+        self.header_name = ctk.CTkFrame(self.left_widget,fg_color="#f1f3eb", width= 300, height= 50)  
+        self.header_name.place(x= 20,y=210)
+        self.name_text = ctk.CTkLabel(self.header_name, text = f'name', width= 150, height= 30, border_width= 1, border_color= 'black', font= ('Comic Sans MS', 18))
+        self.name_text.pack()
+
+        def eventEntry(event,entry):
+            if entry == "name":
+                 # gets the string and removes extra spaces 
+                cardUser.setName(self.entry_name.get().strip())
+                print("entered name")
+            if entry == "family":
+                cardUser.setFamily(self.entry_family.get().strip())
+                print("entered family")
+        self.entry_name = ctk.CTkEntry(self.left_widget, placeholder_text='votre nom: ...' )
+        self.entry_name.place(x= 20,y=265)
+        self.entry_name.lift()
         
+        self.entry_name.bind("<Return>", lambda event : eventEntry(event,"name")) # if when interacted with this button or entry and the player pressed on return do event
+        self.header_family = ctk.CTkFrame(self.left_widget,fg_color="#f1f3eb", width= 300, height= 50)  
+        self.header_family.place(x= 220,y=210)
+        self.family_text = ctk.CTkLabel(self.header_family, text = f'family name', width= 150, height= 30, border_width= 1, border_color= 'black', font= ('Comic Sans MS', 18))
+        self.family_text.pack()
+
+        self.entry_family = ctk.CTkEntry(self.left_widget, placeholder_text='votre nom de famille: ...' )
+        self.entry_family.place(x= 220,y=265)
+        self.entry_family.lift()
+                
+        self.entry_family.bind("<Return>", lambda event : eventEntry(event,"family")) # if when interacted with this button or entry and the player pressed on return do event
+                
+
+
+
+        
+    # fix the option when u double click
+
             
                 
     def create_left_panel(self):
@@ -535,6 +586,7 @@ class GameScreen(ctk.CTkFrame):
         self.main_container.pack_forget()
         self.pubs_container.pack(expand=True, fill="both", padx=10, pady=5)
         self.window.destroy()
+        self.master.focus_force()
         self.create_pub_panel()
     
     

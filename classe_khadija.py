@@ -577,26 +577,29 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         return popUp
     def createBanner(self):
         popUp = None
+        self.master.update_idletasks() # assures that the ad1 behaves like the others because it creates the window too fast. so like this is like telling the program to take a breather before doing things
         popUp = ctk.CTkToplevel(self.master, fg_color= "white")
         popUp.transient(self.master)
+
+        
         if self.order == 1 : # ad number one will be at the bottom
-            self.x = 250
-            self.y = 250
+            self.x = self.master.winfo_x() + 10
+            self.y = self.master.winfo_y() + 70
             self.width = 100
             self.height = 400
         elif self.order == 2:
-            self.x = 1120
-            self.y = 250
+            self.x = self.master.winfo_x() + 890 
+            self.y = self.master.winfo_y() + 70
             self.width = 100
             self.height = 400
         elif self.order == 3:
-            self.x = 485
-            self.y = 675
+            self.x = self.master.winfo_x() + 250
+            self.y = self.master.winfo_y() + 510
             self.width = 500
             self.height = 50
         elif self.order == 4:
-            self.x = 725
-            self.y = 165
+            self.x = self.master.winfo_x() + 485 # le winfo gets the exact coordinated of the window in real time
+            self.y = self.master.winfo_y() - 15
             self.width = 300
             self.height = 20
         elif self.order == 5:
@@ -628,6 +631,50 @@ class AdsPermanent(ctk.CTkFrame): # objet ad permanent
         
              
         
+class Card():
+    def __init__(self,id,name,family,number,expiration,postal):
+        self.id = id
+        self.name = name
+        self.family = family
+        self.number = number
+        self.expiration = expiration
+        self.postal = postal
+        self.valid = False
+
+    def setId(self, id):
+        self.id = id
+    def setName(self, name):
+        self.name = name
+    def setFamily(self, family):
+        self.family = family
+    def setNumber(self, number):
+        self.number = number
+    def setExpiration(self, expiration):
+        self.expiration = expiration
+    def setPostal(self, postal):
+        self.postal = postal
+    def setValid(self, valid):
+        self.valid = valid
+    #getters
+    def getId(self):
+        return self.id
+    def getName(self):
+            return self.name
+    def getFamily(self):
+            return self.family
+    def getNumber(self):
+            return self.number
+    def getExpiration(self):
+            return self.expiration
+    def getPostal(self):
+            return self.postal
+    
+    def checkVaildity(self, card):
+        if card.getId() == self.getId() and card.getFamily() == self.getNumber() and card.getExpiration() == self.getExpiration() and card.getPostal() == self.getPostal():
+            self.setValid(True)
+        else:
+            self.setValid(False)
+
 
 
 class AdsFickle(): #objet ad fickle
@@ -660,7 +707,6 @@ pg.mixer.init()
 #soundtest = Sounds("sfx/tester3.wav")
 #soundtest = pg.mixer.Sound("sfx/tester3.wav")
 #soundtest.play()
-
 
 
 #data1 = DataAds("ads/dataAds(Sheet1).csv") #jsp honestly
